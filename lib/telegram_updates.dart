@@ -68,7 +68,11 @@ Future<String> telegramPrueba(nombre) async {
           .replaceAll('TWeb.init()', "")
           .replaceAllMapped(exp1, (m) => "${m[0]}\n\n")
           .replaceAll('vistas', '')
-          .replaceAll('viewsedited', '');
+          .replaceAll('viewsedited', '')
+          .replaceAll('Canal', '')
+          .replaceAll('Telegram', '')
+          .replaceAll('\n;', '')
+          .replaceAll('Empresa Eléctrica', "Informacion Para:");
     } else {
       return "Lo sentimos, el sitio no se encuentra disponible en estos momentos";
     }
