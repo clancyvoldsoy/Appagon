@@ -526,9 +526,7 @@ class _SenScreenState extends State<SenScreen> {
           ),
         ],
       ),
-      body: Center(
-        child: senCard,
-      ),
+      body: Container(color: Colors.black, child: Center(child: senCard)),
     );
   }
 }
@@ -577,13 +575,16 @@ class _DistributionScreenState extends State<DistributionScreen> {
           // Un botón de ir atrás que nos devuelve al menú principal
         ],
       ),
-      body: Center(
+      body: Container(
+        color: Colors.black,
         // Aquí usamos un widget Column para mostrar la card con la distribución para hoy y el botón de buscar fecha
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Aquí usamos un widget Card para envolver el texto con la información de la distribución para hoy
             Card(
+              color: Colors.white,
+
               // Aquí usamos un widget Padding para agregar un espacio entre el texto y los bordes de la tarjeta
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -619,19 +620,35 @@ class _DistributionScreenState extends State<DistributionScreen> {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return AlertDialog(
-                        // Aquí usamos un widget Card para envolver el texto con la información de la distribución para el mes
-                        content: Card(
-                          // Aquí usamos un widget Padding para agregar un espacio entre el texto y los bordes de la tarjeta
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            // Aquí usamos un widget Center para centrar el texto dentro de la tarjeta
-                            child: Center(
-                              child: Text(distributionMonth),
-                            ),
+                      return Scaffold(
+                          appBar: AppBar(
+                            backgroundColor: Colors.black,
+                            foregroundColor: Colors.white,
+                            title: const Text('Distribución'),
+                            actions: const [
+                              // Un botón de ir atrás que nos devuelve al menú principal
+                            ],
                           ),
-                        ),
-                      );
+                          body: Container(
+                              color: Colors.black,
+                              // Aquí usamos un widget Column para mostrar la card con la distribución para hoy y el botón de buscar fecha
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Aquí usamos un widget Card para envolver el texto con la información de la distribución para hoy
+                                    Card(
+                                      color: Colors.white,
+
+                                      // Aquí usamos un widget Padding para agregar un espacio entre el texto y los bordes de la tarjeta
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        // Aquí usamos un widget Center para centrar el texto dentro de la tarjeta
+                                        child: Center(
+                                          child: Text(distributionMonth),
+                                        ),
+                                      ),
+                                    )
+                                  ])));
                     },
                   );
                 }
