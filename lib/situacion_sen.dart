@@ -63,15 +63,23 @@ class SituacionDelSen {
 
   senSituation() async {
     SituacionDelSen situacion = SituacionDelSen();
-    await situacion.getResponse();
+    String afectacion = await situacion.getResponse();
     String message = situacion.situacionMW.toString();
     if (message == '0') {
       return 'esperando situacion del SEN';
     }
-    if (message.contains('-')) {
-      return 'Appagon:\nSe estima un deficit de ${message.replaceAll('-', '')} MW para el dia de hoy';
+    if (afectacion.contains('una afectación de')) {
+      RegExp exp = RegExp(r'una afectación de (\d{1,4}) MW');
+      Iterable<Match> matches = exp.allMatches(afectacion);
+      for (final m in matches) {
+        return 'Se pronostica ${(m[0])} para el dia de hoy';
+      }
     } else {
-      return 'Appagon:\nSe estima una reserva de $message MW para el dia de hoy';
+      if (message.contains('-')) {
+        return 'Appagon:\nSe estima un deficit de ${message.replaceAll('-', '')} MW para el dia de hoy';
+      } else {
+        return 'Appagon:\nSe estima una reserva de $message MW para el dia de hoy';
+      }
     }
   }
 }
