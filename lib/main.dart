@@ -365,6 +365,12 @@ class _MainMenuState extends State<MainMenu> {
         home: Scaffold(
       // AppBar personalizada sin el botón de retroceso
       appBar: AppBar(
+        title: const Text('Appagon'),
+        titleTextStyle: const TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w200,
+            color: Colors.white,
+            fontStyle: FontStyle.normal),
         automaticallyImplyLeading:
             false, // Esto desactiva el botón de retroceso
         backgroundColor: Colors.black, // Fondo de color negro
