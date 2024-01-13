@@ -7,6 +7,7 @@ late String message;
 late String respuesta;
 
 class SituacionDelSen {
+  String returnValue;
   int situacionMW;
   String linkWeb;
   bool actualizacion;
@@ -17,6 +18,7 @@ class SituacionDelSen {
         linkWeb = '',
         actualizacion = false,
         url = '',
+        returnValue = '',
         situacion = '';
 
   getResponse() async {
@@ -48,8 +50,12 @@ class SituacionDelSen {
           this.situacionMW = intNumbers.first - intNumbers.last;
           String message = this.situacionMW.toString();
           if (situacionMW < 0) {
+            returnValue =
+                "Parte del SEN para el hoy, $scrapping\n \nSe estima una un deficit de ${message.toString().replaceAll('-', '')} MW para el dia de hoy\nHay Probabilidades de Afectacion";
             return "Parte del SEN para el hoy, $scrapping\n \nSe estima una un deficit de ${message.toString().replaceAll('-', '')} MW para el dia de hoy\nHay Probabilidades de Afectacion";
           } else {
+            returnValue =
+                "Parte del SEN para el hoy, $scrapping\n \nSe estima una reserva de ${message.toString().replaceAll('-', '')} MW para el dia de hoy\n\nNo Hay Probabilidades de Afectacion";
             return "Parte del SEN para el hoy, $scrapping\n \nSe estima una reserva de ${message.toString().replaceAll('-', '')} MW para el dia de hoy\n\nNo Hay Probabilidades de Afectacion";
           }
         } else {
@@ -57,7 +63,43 @@ class SituacionDelSen {
         }
       }
     } else {
-      return "Verifique su conexion a internet e intente nuevamente";
+      String url = 'https://t.me/s/EmpresaElectricaDeLaHabana';
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        var respuestaParseada = parse(response.body);
+        String situacionSen = respuestaParseada.body!.text;
+        if (situacionSen.contains(formattedDate)) {
+          int inicio = situacionSen.indexOf(formattedDate);
+          int fin =
+              situacionSen.indexOf('MINEM', inicio + formattedDate.length);
+          var parseado = situacionSen.substring(inicio, fin + 'MINEM'.length);
+          var scrapping =
+              parseado.replaceAll('👉', '').replaceAll(RegExp(r'\s{2,}'), ' ');
+          if (scrapping.contains(formattedDate)) {
+            RegExp exp = RegExp(
+                r'una disponibilidad de (\d+) MW|una demanda máxima de (\d+) MW');
+            Iterable<Match> matches = exp.allMatches(scrapping);
+            List<int> intNumbers = [];
+            for (Match match in matches) {
+              String? number = match.group(1) ?? match.group(2);
+              intNumbers.add(int.parse(number!));
+            }
+            this.situacionMW = intNumbers.first - intNumbers.last;
+            String message = this.situacionMW.toString();
+            if (situacionMW < 0) {
+              returnValue =
+                  "Parte del SEN para el hoy, $scrapping\n \nSe estima una un deficit de ${message.toString().replaceAll('-', '')} MW para el dia de hoy\nHay Probabilidades de Afectacion";
+              return "Parte del SEN para el hoy, $scrapping\n \nSe estima una un deficit de ${message.toString().replaceAll('-', '')} MW para el dia de hoy\nHay Probabilidades de Afectacion";
+            } else {
+              returnValue =
+                  "Parte del SEN para el hoy, $scrapping\n \nSe estima una reserva de ${message.toString().replaceAll('-', '')} MW para el dia de hoy\n\nNo Hay Probabilidades de Afectacion";
+              return "Parte del SEN para el hoy, $scrapping\n \nSe estima una reserva de ${message.toString().replaceAll('-', '')} MW para el dia de hoy\n\nNo Hay Probabilidades de Afectacion";
+            }
+          } else {
+            return 'No se ha actualizado el parte del SEN para el dia de hoy';
+          }
+        }
+      }
     }
   }
 

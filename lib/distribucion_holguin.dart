@@ -1,7 +1,10 @@
+import 'package:appagon/main.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-var hoy = DateTime.now();
+final _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+DateTime hoy = DateTime.now();
 Map<String, List> rotacionesMatanzas = {
   "01-diciembre-2023": [
     "B1-B2",
@@ -6717,7 +6720,6 @@ Map<String, List> bloquesHolguin = {
     'Piedra Blanca'
   ]
 };
-//HOLGUIN
 
 rotacionDiaria(nombre) {
   initializeDateFormatting('es_ES', null);
@@ -6781,26 +6783,6 @@ rotacionDiaria(nombre) {
   }
 }
 
-//LAS TUNAS
-// String rotacionDiariaTunas() {
-//   initializeDateFormatting('es_ES', null);
-//   var formattedDate = DateFormat('dd-MMMM-yyyy', 'es').format(hoy);
-//   if (rotacionesHolguin[formattedDate] == null) {
-//     return 'Ajuste la fecha del telefono correctamente';
-
-// }
-
-// String planMensualTunas() {
-//   initializeDateFormatting('es_ES', null);
-//   var end = DateTime.now().add(const Duration(days: 30));
-//   var formattedInicio = DateFormat('dd-MMMM-yyyy', 'es').format(hoy);
-//   var formattedFin = DateFormat('dd-MMMM-yyyy', 'es').format(end);
-//   int inicio = rotacionesTunas.toString().indexOf(formattedInicio.toString());
-//   int fin = rotacionesTunas.toString().indexOf(formattedFin.toString());
-//   var mes = rotacionesTunas.toString().substring(inicio, fin);
-//   return mes;
-// }
-
 planMensual(nombre, selectedDate) {
   late DateTime picked = selectedDate;
   initializeDateFormatting('es_ES', null);
@@ -6859,6 +6841,177 @@ planMensual(nombre, selectedDate) {
     return 'La informacion de las rotaciones de $nombre aun no estan disponibles en la App';
   }
 }
+
+class Bloques {
+  bool notifElectrodomesticos;
+  bool notifCargaMovil;
+  String body;
+  Bloques()
+      : notifCargaMovil = true,
+        notifElectrodomesticos = true,
+        body = '';
+
+  bloqueAfectado(nombre, bloqueSeleccionado) async {
+    const androidInitializationSetting =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const initSettings =
+        InitializationSettings(android: androidInitializationSetting);
+    await _flutterLocalNotificationsPlugin.initialize(initSettings);
+
+    bloqueSeleccionado = 'B2';
+    nombre = 'Holguin';
+    initializeDateFormatting('es_ES', null);
+    final formattedDate = DateFormat('dd-MMMM-yyyy', 'es').format(hoy);
+
+    final holguin =
+        '12:00 AM-06:00 AM : se afecta el ${rotacionesHolguin[formattedDate]?[0]}\n06:00 AM-12:00 PM : se afecta el ${rotacionesHolguin[formattedDate]?[1]}\n12:00 PM-06:00PM  : se afecta el ${rotacionesHolguin[formattedDate]?[0]}\n06:00 PM-12:00 AM : se afecta el ${rotacionesHolguin[formattedDate]?[3]}\n Se encuentra de Reserva el  ${rotacionesHolguin[formattedDate]?[4]}';
+    final tunas =
+        '1:00 AM - 05:00 AM : se afecta el bloque ${rotacionesTunas[formattedDate]?[0]}\n05:00 AM-09:00 AM : se afecta el bloque  ${rotacionesTunas[formattedDate]?[1]}\n09:00 AM-01:00PM  : se afecta el bloque  ${rotacionesTunas[formattedDate]?[2]}\n01:00 PM-05:00 PM : se afecta el bloque  ${rotacionesTunas[formattedDate]?[3]}\n05:00 PM-09:00 PM : se afectan los bloques  ${rotacionesTunas[formattedDate]?[4]}\n09:00 PM-01:00 AM : se afecta el bloque  ${rotacionesTunas[formattedDate]?[5]}\n';
+    final guantanamo =
+        '12:00 AM - 04:00 AM : se afecta el bloque ${rotacionesGuantanamo[formattedDate]?[0]}\n04:00 AM-08:00 AM : se afecta el bloque  ${rotacionesGuantanamo[formattedDate]?[1]}\n08:00 AM-02:00PM  : se afecta el bloque  ${rotacionesGuantanamo[formattedDate]?[2]}\n02:00 PM-08:00 PM : se afecta el bloque  ${rotacionesGuantanamo[formattedDate]?[3]}\n08:00 PM-12:00 AM : se afectan los bloques  ${rotacionesGuantanamo[formattedDate]?[4]}\n';
+    final mayabeque =
+        '02:00 AM - 08:00 AM : se afecta el bloque ${rotacionesMayabeque[formattedDate]?[0]}\n08:00 AM-02:00 PM : se afecta el bloque  ${rotacionesMayabeque[formattedDate]?[1]}\n02:00 PM-08:00PM  : se afecta el bloque  ${rotacionesMayabeque[formattedDate]?[2]}\n08:00 PM-02:00 AM : se afecta el bloque  ${rotacionesMayabeque[formattedDate]?[3]}\n';
+    final artemisa =
+        '12:00 AM - 05:00 AM : se afecta el bloque ${rotacionesArtemisa[formattedDate]?[0]}\n05:00 AM-10:00 AM : se afecta el bloque  ${rotacionesArtemisa[formattedDate]?[1]}\n10:00 AM-03:00PM  : se afecta el bloque  ${rotacionesArtemisa[formattedDate]?[2]}\n03:00 PM-08:00 PM : se afecta el bloque  ${rotacionesArtemisa[formattedDate]?[3]}\n08:00 PM-12:00 AM : se afecta el bloque  ${rotacionesArtemisa[formattedDate]?[4]}';
+    final cienfuegos =
+        '2:00 AM - 06:00 AM : se afecta el bloque ${rotacionesCienfuegos[formattedDate]?[0]}\n06:00 AM-12:00 PM : se afecta el bloque  ${rotacionesCienfuegos[formattedDate]?[1]}\n12:00 PM-06:00PM  : se afecta el bloque  ${rotacionesCienfuegos[formattedDate]?[2]}\n06:00 PM-12:00 AM : se afecta el bloque  ${rotacionesCienfuegos[formattedDate]?[3]}\n06:00 PM-09:00 PM : Bloque Extra  ${rotacionesCienfuegos[formattedDate]?[4]}';
+    final santiago =
+        '03:00 AM - 07:00 AM : se afecta el bloque ${rotacionesSantiago[formattedDate]?[0]}\n07:00 AM-01:00 PM : se afecta el bloque  ${rotacionesSantiago[formattedDate]?[1]}\n01:00 PM-07:00PM  : se afecta el bloque  ${rotacionesSantiago[formattedDate]?[2]}\n07:00 PM-11:00 PM : se afecta el bloque  ${rotacionesSantiago[formattedDate]?[3]}\n11:00 PM-03:00 AM : se afecta el bloque   ${rotacionesSantiago[formattedDate]?[4]}';
+    final villaClara =
+        '2:00 AM - 06:00 AM : se afecta el bloque ${rotacionesVillaClara[formattedDate]?[0]}\n03:00 AM-09:00 AM : se afecta el bloque  ${rotacionesVillaClara[formattedDate]?[1]}\n06:00 AM-12:00PM  : se afecta el bloque  ${rotacionesVillaClara[formattedDate]?[2]}\n09:00 AM-03:00 PM : se afecta el bloque  ${rotacionesVillaClara[formattedDate]?[3]}\n12:00 PM-06:00 PM : se afecta el bloque   ${rotacionesVillaClara[formattedDate]?[4]}\n12:00 PM-06:00 PM : se afecta el bloque   ${rotacionesVillaClara[formattedDate]?[5]}\n03:00 PM-09:00 PM : se afecta el bloque   ${rotacionesVillaClara[formattedDate]?[6]}\n09:00 PM-03:00 AM : se afecta el bloque   ${rotacionesVillaClara[formattedDate]?[7]}';
+    final matanzas =
+        '12:00 AM - 03:00 AM : se afecta el bloque ${rotacionesMatanzas[formattedDate]?[0]}\n03:00 AM-06:00 AM : se afecta el bloque  ${rotacionesMatanzas[formattedDate]?[1]}\n06:00 AM-09:00PM  : se afecta el bloque  ${rotacionesMatanzas[formattedDate]?[2]}\n09:00 AM-01:00 PM : se afecta el bloque  ${rotacionesMatanzas[formattedDate]?[3]}\n01:00 PM-06:00 PM : se afecta el bloque   ${rotacionesMatanzas[formattedDate]?[4]}\n06:00 PM-09:00 PM : se afecta el bloque   ${rotacionesMatanzas[formattedDate]?[5]}\n09:00 PM-12:00 AM : se afecta el bloque   ${rotacionesMatanzas[formattedDate]?[6]}';
+
+    if (nombre == 'Holguin' &&
+        rotacionesHolguin[formattedDate]?[0]
+            .contains(bloqueSeleccionado && notifElectrodomesticos == true)) {
+      DateTime electrodomesticos = DateTime(hoy.year, hoy.month, 20, 39, 0);
+      if (hoy == electrodomesticos) {
+        localNotificationService.showLocalNotification(
+          'Appagon',
+          'Faltan una hora para el apagon, deberias desconectar todo',
+        );
+      }
+    }
+    if (nombre == 'Holguin' &&
+        rotacionesHolguin[formattedDate]?[1]
+            .contains(bloqueSeleccionado && notifElectrodomesticos == true)) {
+      DateTime electrodomesticos = DateTime(hoy.year, hoy.month, 20, 39, 0);
+      if (hoy == electrodomesticos) {
+        localNotificationService.showLocalNotification(
+          'Appagon',
+          'Faltan una hora para el apagon, deberias desconectar todo',
+        );
+      }
+    }
+    if (nombre == 'Holguin' &&
+        rotacionesHolguin[formattedDate]?[2]
+            .contains(bloqueSeleccionado && notifElectrodomesticos == true)) {
+      DateTime electrodomesticos = DateTime(hoy.year, hoy.month, 20, 39, 0);
+      if (hoy == electrodomesticos) {
+        localNotificationService.showLocalNotification(
+          'Appagon',
+          'Faltan una hora para el apagon, deberias desconectar todo',
+        );
+      }
+    }
+    if (nombre == 'Holguin' &&
+        rotacionesHolguin[formattedDate]?[3]
+            .contains(bloqueSeleccionado && notifElectrodomesticos == true)) {
+      DateTime electrodomesticos = DateTime(hoy.year, hoy.month, 20, 39, 0);
+      if (hoy == electrodomesticos) {
+        localNotificationService.showLocalNotification(
+          'Appagon',
+          'Faltan una hora para el apagon, deberias desconectar todo',
+        );
+      }
+    }
+
+    if (nombre == 'Villa Clara') {
+      return villaClara.toString();
+    }
+    if (nombre == 'Las Tunas') {
+      return tunas.toString();
+    }
+    if (nombre == 'Guantanamo') {
+      return guantanamo.toString();
+    }
+    if (nombre == 'Mayabeque') {
+      return mayabeque.toString();
+    }
+    if (nombre == 'Cienfuegos') {
+      return cienfuegos.toString();
+    }
+    if (nombre == 'Artemisa') {
+      return artemisa.toString();
+    }
+    if (nombre == 'Santiago de Cuba') {
+      return santiago.toString();
+    }
+    if (nombre == 'Matanzas') {
+      return matanzas.toString();
+    }
+    if (nombre == 'La Habana' ||
+        nombre == 'Pinar del Rio' ||
+        nombre == 'Ciego de Avila' ||
+        nombre == 'Camaguey' ||
+        nombre == 'Granma') {
+      return 'La informacion de las rotaciones de $nombre aun no estan disponibles en la App';
+    }
+  }
+
+  showLocalNotification(String title, String body) async {
+    String title = 'Appagon';
+    String nombre = 'Holguin';
+    String bloqueSeleccionado = 'B2';
+    await bloqueAfectado(nombre, bloqueSeleccionado);
+
+    const androidNotificationDetail = AndroidNotificationDetails(
+        '0', // channel Id
+        'general' // channel Name
+        );
+    const iosNotificatonDetail = DarwinNotificationDetails();
+    const notificationDetails = NotificationDetails(
+      iOS: iosNotificatonDetail,
+      android: androidNotificationDetail,
+    );
+    _flutterLocalNotificationsPlugin.show(0, title, body, notificationDetails);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//LAS TUNAS
+// String rotacionDiariaTunas() {
+//   initializeDateFormatting('es_ES', null);
+//   var formattedDate = DateFormat('dd-MMMM-yyyy', 'es').format(hoy);
+//   if (rotacionesHolguin[formattedDate] == null) {
+//     return 'Ajuste la fecha del telefono correctamente';
+
+// }
+
+// String planMensualTunas() {
+//   initializeDateFormatting('es_ES', null);
+//   var end = DateTime.now().add(const Duration(days: 30));
+//   var formattedInicio = DateFormat('dd-MMMM-yyyy', 'es').format(hoy);
+//   var formattedFin = DateFormat('dd-MMMM-yyyy', 'es').format(end);
+//   int inicio = rotacionesTunas.toString().indexOf(formattedInicio.toString());
+//   int fin = rotacionesTunas.toString().indexOf(formattedFin.toString());
+//   var mes = rotacionesTunas.toString().substring(inicio, fin);
+//   return mes;
+// }
+
 
 // Map<int, List> rotacion = {
 //   1: ['"B4"', '"B1"', '"B2"', '"B3"', '"B4"', '"B1"', '"B2"', '"B3"'],
