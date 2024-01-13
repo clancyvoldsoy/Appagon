@@ -10,6 +10,22 @@ import 'situacion_sen.dart';
 import 'telegram_updates.dart';
 import 'distribucion_holguin.dart';
 
+final Map<String, List<String>> provincias = {
+  'La Habana': ['no disponible'],
+  'Pinar del Rio': ['no disponible'],
+  'Ciego de Avila': ['no disponible'],
+  'Camaguey': ['no disponible'],
+  'Granma': ['no disponible'],
+  'Artemisa': ['B1', 'B2'],
+  'Santiago de Cuba': ['B1', 'B2'],
+  'Mayabeque': ['B1', 'B2', 'B3'],
+  'Cienfuegos': ['B1', 'B2', 'B3'],
+  'Matanzas': ['B1', 'B2', 'B3', 'B4'],
+  'Villa Clara': ['B1', 'B2', 'B3', 'B4'],
+  'Holguin': ['B1', 'B2', 'B3', 'B4'],
+  'Guantanamo': ['B1', 'B2', 'B3', 'B4'],
+  'Las Tunas': ['1', '2', '3', '4'],
+};
 Bloques bloques = Bloques();
 String bloqueSeleccionado = '';
 String nombre = 'Holguin';
@@ -30,7 +46,7 @@ class DropDownClase extends StatefulWidget {
   final Map<String, List<String>> provincias;
 
   // El constructor que recibe el mapa como parámetro
-  DropDownClase({required this.provincias});
+  const DropDownClase({super.key, required this.provincias});
 
   @override
   _DropDownClaseState createState() => _DropDownClaseState();
@@ -54,9 +70,11 @@ class _DropDownClaseState extends State<DropDownClase> {
       setState(() {
         provincia =
             prefs.getString("provincia") ?? widget.provincias.keys.first;
+        nombre = prefs.getString('provincia') ?? widget.provincias.keys.first;
         bloque =
             prefs.getString("bloque") ?? widget.provincias[provincia]!.first;
       });
+      bloqueSeleccionado = prefs.getString('bloque') ?? '';
     });
   }
 
@@ -66,6 +84,8 @@ class _DropDownClaseState extends State<DropDownClase> {
       children: [
         // El primer DropDown para las provincias
         DropdownButton<String>(
+          dropdownColor: Colors.blueGrey, // Fondo del botón en color azul
+          style: const TextStyle(color: Colors.white), //
           value: provincia,
           items: widget.provincias.keys
               .map((e) => DropdownMenuItem<String>(
@@ -77,14 +97,23 @@ class _DropDownClaseState extends State<DropDownClase> {
             // Actualizar el valor seleccionado y guardar en el SharedPreferences
             setState(() {
               provincia = value!;
+              nombre = provincia;
               bloque = widget.provincias[provincia]!.first;
               prefs.setString("provincia", provincia);
               prefs.setString("bloque", bloque);
             });
           },
         ),
+        const Text(
+          'Seleccione su bloque',
+          style: TextStyle(
+            color: Colors.white, // Texto de color blanco
+          ),
+        ),
         // El segundo DropDown para los bloques que correspondan
         DropdownButton<String>(
+          dropdownColor: Colors.blueGrey, // Fondo del botón en color azul
+          style: const TextStyle(color: Colors.white), //
           value: bloque,
           items: widget.provincias[provincia]!
               .map((e) => DropdownMenuItem<String>(
@@ -95,7 +124,9 @@ class _DropDownClaseState extends State<DropDownClase> {
           onChanged: (value) {
             // Actualizar el valor seleccionado y guardar en el SharedPreferences
             setState(() {
+              bloque = widget.provincias[provincia]!.first;
               bloque = value!;
+              bloqueSeleccionado = bloque;
               prefs.setString("bloque", bloque);
             });
           },
@@ -388,22 +419,14 @@ class _SplashScreenState extends State<SplashScreen> {
       // Obtiene el valor de isFirstRun
       bool isFirstRun = await getFirstRunValue();
       // Si es la primera vez que se ejecuta la app, va a la config screen y cambia el valor de isFirstRun a false
-      if (isFirstRun) {
-        // ignore: use_build_context_synchronously
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ConfigScreen()),
-        );
-        setFirstRunValue(false);
-      }
+
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ConfigScreen()),
+      );
+
       // Si no es la primera vez que se ejecuta la app, va al main menu
-      else {
-        // ignore: use_build_context_synchronously
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const MainMenu()),
-        );
-      }
     });
   }
 
@@ -498,22 +521,6 @@ class ConfigScreen extends StatefulWidget {
 
 // Definimos el estado de la pantalla de configuración principal
 class _ConfigScreenState extends State<ConfigScreen> {
-  final Map<String, List<String>> provincias = {
-    'La Habana': ['no disponible'],
-    'Pinar del Rio': ['no disponible'],
-    'Ciego de Avila': ['no disponible'],
-    'Camaguey': ['no disponible'],
-    'Granma': ['no disponible'],
-    'Artemisa': ['B1', 'B2'],
-    'Santiago de Cuba': ['B1', 'B2'],
-    'Mayabeque': ['B1', 'B2', 'B3'],
-    'Cienfuegos': ['B1', 'B2', 'B3'],
-    'Matanzas': ['B1', 'B2', 'B3', 'B4'],
-    'Villa Clara': ['B1', 'B2', 'B3', 'B4'],
-    'Holguin': ['B1', 'B2', 'B3', 'B4'],
-    'Guantanamo': ['B1', 'B2', 'B3', 'B4'],
-    'Las Tunas': ['1', '2', '3', '4'],
-  };
 // Este es el mapa de provincias con sus listas de bloques
 
 // Estas son las variables que guardan los valores seleccionados en cada dropdown
@@ -572,11 +579,14 @@ class _ConfigScreenState extends State<ConfigScreen> {
                               color: onBackgroundColor, // Texto de color blanco
                             ),
                           ),
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: DropDownClase(
+                              provincias: provincias,
+                            ),
+                          )
                         ],
                       ),
-                    ),
-                    DropDownClase(
-                      provincias: provincias,
                     ),
 
                     const Center(child: SwitchElectrodomesticos()),
@@ -587,7 +597,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
                       padding: const EdgeInsets.all(16.0),
                       child: ElevatedButton(
                         onPressed: () async {
-                          // Mostramos un indicador de carga mientras se navega a la otra pantalla
+                          // Mostramos un indicador
+
+                          //de carga mientras se navega a la otra pantalla
                           // ignore: use_build_context_synchronously
                           showDialog(
                             context: context,
@@ -609,6 +621,8 @@ class _ConfigScreenState extends State<ConfigScreen> {
                               ),
                             ),
                           );
+
+                          actualizarGeneracion();
                           // Después de un tiempo, pasamos a la otra pantalla
                           Future.delayed(const Duration(seconds: 1), () {
                             Navigator.push(
@@ -800,7 +814,7 @@ class _MainMenuState extends State<MainMenu> {
                         ),
                   ),
                   Text(
-                    'Una aplicación para monitorear la situación energética de Cuba',
+                    'Una aplicación para monitorear la situación energética de Cuba $bloqueSeleccionado',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: onBackgroundColor,
                         ),
@@ -1475,5 +1489,4 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await localNotificationService.setup();
   runApp(const AppagonApp());
-  await actualizarGeneracion();
 }
