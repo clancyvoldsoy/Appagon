@@ -2,6 +2,8 @@
 
 // ignore_for_file: library_private_types_in_public_api, unused_local_variable, await_only_futures, duplicate_ignore
 
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +11,9 @@ import 'dart:core';
 import 'situacion_sen.dart';
 import 'telegram_updates.dart';
 import 'distribucion_holguin.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_timezone/flutter_timezone.dart';
 
 final Map<String, List<String>> provincias = {
   'La Habana': ['no disponible'],
@@ -26,11 +31,10 @@ final Map<String, List<String>> provincias = {
   'Guantanamo': ['B1', 'B2', 'B3', 'B4'],
   'Las Tunas': ['1', '2', '3', '4'],
 };
-Bloques bloques = Bloques();
 String bloqueSeleccionado = '';
 String nombre = 'Holguin';
-bool notificacionElectrodomesticos = true;
-bool notificacionCargarMovil = true;
+bool notificacionElectrodomesticos = false;
+bool notificacionCargarMovil = false;
 LocalNotificationService localNotificationService = LocalNotificationService();
 
 final generacion = ValueNotifier<String>('esperando situacion del SEN ');
@@ -160,7 +164,7 @@ class _SwitchCargarMovilState extends State<SwitchCargarMovil> {
   Future<void> getSwitchValue() async {
     final prefs = await SharedPreferences.getInstance();
     final value = await prefs.getBool(switchKey) ?? false;
-    final notificacionCargarMovil = await prefs.getBool(switchKey) ?? false;
+    notificacionCargarMovil = value;
     setState(() {
       isSwitched = value;
     });
@@ -233,10 +237,10 @@ class _SwitchElectrodomesticosState extends State<SwitchElectrodomesticos> {
   Future<void> getSwitchElectroValue() async {
     final prefs = await SharedPreferences.getInstance();
     final value = await prefs.getBool(switchElectroKey) ?? false;
-    final notificacionElectrodomesticos =
-        await prefs.getBool(switchElectroKey) ?? false;
+
     setState(() {
       isSwitchedElectro = value;
+      notificacionElectrodomesticos = value;
     });
   }
 
@@ -278,9 +282,9 @@ class _SwitchElectrodomesticosState extends State<SwitchElectrodomesticos> {
             setState(() {
               // Actualiza el valor del switch en el estado y en las preferencias compartidas
               isSwitchedElectro = value;
+
               setSwitchElectroValue(value);
               // Cambia la variable notificacionCargarMovil por notificacionElectrodomesticos
-              notificacionElectrodomesticos = isSwitchedElectro;
             });
           },
           activeTrackColor: Colors.purpleAccent,
@@ -597,6 +601,12 @@ class _ConfigScreenState extends State<ConfigScreen> {
                       padding: const EdgeInsets.all(16.0),
                       child: ElevatedButton(
                         onPressed: () async {
+                          /////////////////////?HERE IS THE BUTTON!!!!
+                          LocalNotificationService().bloqueAfectado(
+                              nombre,
+                              bloqueSeleccionado,
+                              notificacionElectrodomesticos,
+                              notificacionCargarMovil);
                           // Mostramos un indicador
 
                           //de carga mientras se navega a la otra pantalla
@@ -1487,6 +1497,10 @@ class _TelegramScrapperState extends State<TelegramScrapper> {
 // El punto de entrada de la app
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await localNotificationService.setup();
+  tz.initializeTimeZones();
+  final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+  tz.setLocalLocation(tz.getLocation(timeZoneName));
+  LocalNotificationService().setup();
+
   runApp(const AppagonApp());
 }
