@@ -1,4 +1,4 @@
-# Appagon
+# Appagón
 aplicación cubana para obtener la actualización en tiempo real de la situación energética de cada provincia. 
 
 
