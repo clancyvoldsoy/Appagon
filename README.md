@@ -8,7 +8,7 @@ aplicación cubana para obtener la actualización en tiempo real de la situació
 
 Appagón es una aplicación desarrollada para Android que te permite recibir notificaciones y avisos previos al apagón programado, conocer el parte diario del SEN de Cuba, la información de última hora de tu provincia, así como los horarios de rotación de los apagones programados en cada provincia para el año completo.
 
-¿Quién creó Appagón?
+##¿Quién creó Appagón?
 
 Appagón fue creada por un desarrollador independiente, que no tiene ninguna relación con la Unión Eléctrica (UNE) de Cuba ni con ninguna otra entidad oficial.
 ¿Para qué provincias está disponible Appagón?
