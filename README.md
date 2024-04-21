@@ -1,5 +1,5 @@
 # Appagón
-aplicación cubana para obtener la actualización en tiempo real de la situación energética de cada provincia. 
+Aplicación cubana para obtener la actualización en tiempo real de la situación energética de cada provincia. 
 
 
 ## Preguntas y respuestas sobre Appagón
