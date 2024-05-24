@@ -6786,7 +6786,7 @@ planMensual(nombre, selectedDate) {
   initializeDateFormatting('es_ES', null);
   final formattedDate = DateFormat('dd-MMMM-yyyy', 'es').format(picked);
   final holguin =
-      'Distribucion para el $formattedDate:\n\n 12:00 AM-06:00 AM : se afecta el ${rotacionesHolguin[formattedDate]?[0]}\n06:00 AM-12:00 PM : se afecta el ${rotacionesHolguin[formattedDate]?[1]}\n12:00 PM-06:00PM  : se afecta el ${rotacionesHolguin[formattedDate]?[0]}\n06:00 PM-12:00 AM : se afecta el ${rotacionesHolguin[formattedDate]?[3]}\n Se encuentra de Reserva el  ${rotacionesHolguin[formattedDate]?[4]}';
+      'Distribucion para el $formattedDate:\n\n 12:00 AM-03:00 AM : se afecta el ${rotacionesHolguin[formattedDate]?[0]}\n03:00 AM-06:00 AM : se afecta el ${rotacionesHolguin[formattedDate]?[1]}\n06:00 AM-12:00PM  : se afecta el ${rotacionesHolguin[formattedDate]?[0]}\n12:00 PM-06:00 PM : se afecta el ${rotacionesHolguin[formattedDate]?[3]}\n06:00 PM-12:00 AM : se afecta el ${rotacionesHolguin[formattedDate]?[4]}';
   final tunas =
       'Distribucion para el $formattedDate:\n\n01:00 AM - 05:00 AM : se afecta el bloque ${rotacionesTunas[formattedDate]?[0]}\n05:00 AM-09:00 AM : se afecta el bloque  ${rotacionesTunas[formattedDate]?[1]}\n09:00 AM-01:00PM  : se afecta el bloque  ${rotacionesTunas[formattedDate]?[2]}\n01:00 PM-05:00 PM : se afecta el bloque  ${rotacionesTunas[formattedDate]?[3]}\n05:00 PM-09:00 PM : se afectan los bloques  ${rotacionesTunas[formattedDate]?[4]}\n09:00 PM-01:00 AM : se afecta el bloque  ${rotacionesTunas[formattedDate]?[5]}\n';
   final guantanamo =
