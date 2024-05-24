@@ -2,8 +2,6 @@
 
 // ignore_for_file: library_private_types_in_public_api, unused_local_variable, await_only_futures, duplicate_ignore
 
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import 'flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
