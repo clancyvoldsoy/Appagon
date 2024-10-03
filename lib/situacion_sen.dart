@@ -26,7 +26,7 @@ class SituacionDelSen {
     DateTime hoy = DateTime.now(); //FECHA
     String formattedDate =
         DateFormat('d \'de\' MMMM \'de\' yyyy', 'es').format(hoy);
-    String url = 'https://t.me/s/elecholguin';
+    String url = 'https://t.me/s/EmpresaElectricaDeLaHabana';
 
     var response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
@@ -64,10 +64,12 @@ class SituacionDelSen {
       } else {
         await initializeDateFormatting('es', null);
         DateTime hoy = DateTime.now(); //FECHA
-        String formattedDate = DateFormat('dd-MMMM-yyyy', 'es').format(hoy);
+        String dia = DateFormat('dd', 'es').format(hoy);
+        String mes = DateFormat('MMMM', 'es').format(hoy);
+        String year = DateFormat('yyyy', 'es').format(hoy);
         String linkWeb = formattedDate.replaceAll('-', '-de-');
         String url =
-            'https://www.minem.gob.cu/es/noticias/situacion-del-sen/situacion-del-sen-para-el-$linkWeb';
+            'https://www.minem.gob.cu/es/noticias/situacion-del-sistema-electrico-para-el-06-de-septiembre-de-2024';
 
         var response = await http.get(Uri.parse(url));
         if (response.statusCode == 200) {
